@@ -1,17 +1,19 @@
 import React, { Component } from 'react';
 import * as sampleData from './sampleData';
 import Dropdowns from './Dropdowns';
-// import CoffeeList from './CoffeeList';
+import ArrivalsList from './ArrivalsList';
+
+const defaults = {
+    arrivals: sampleData.realtimeArrivalSample,
+    stationNames: sampleData.stationNames,
+    lineNames: ["All", "Blue", "Gold", "Green", "Red"],
+    directions: ["All", "N", "S", "E", "W"]
+  };
 
 class Stations extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      arrivals: sampleData.realtimeArrivalSample,
-      stationNames: sampleData.stationNames,
-      lineNames: ["All", "Blue", "Green", "Orange", "Red"],
-      directions: ["All", "N", "S", "E", "W"]
-    }
+    this.state = {...defaults}
   }
 
   render() {
@@ -22,7 +24,7 @@ class Stations extends Component {
                 <Dropdowns
                     label="Line" name="LineName"
                     opts={this.state.lineNames}
-                    handleChange={this._handleSelect}
+                    handleChange={this._handleSelectLine}
                 />
                 <Dropdowns
                     label="Direction" name="Direction"
@@ -35,28 +37,52 @@ class Stations extends Component {
                     handleChange={this._handleSelect}
                 />
             </div>
+            <ArrivalsList arrivals={this.state.arrivals}/>
             <p>{this._display(this.state.arrivals)}</p>
             
         </div>
     );
   }
 
-  _display(arrs) {
-    //   console.table(arrs);
-    //   console.table(this.state.stationNames);
-      return arrs.map((arrival, index) => {
-        return (
-            <span key={index}>{arrival.STATION} | {arrival.LINE} | {arrival.DIRECTION} | {arrival.TRAIN_ID} | {arrival.NEXT_ARR}<br /></span>
-        );
-      });
+  _resetToDefaults() {
+    this.setState({...defaults});
   }
 
-  _handleSelect = (event) => {
-      const val = event.target.value
-      console.log("Selected Value: ", val);
-    //   this.setState({
-    //     orders: [...this.state.orders, order]
+  _display(arrs) {
+      console.table(arrs);
+      console.table(this.state.stationNames);
+    //   return arrs.map((arrival, index) => {
+    //     return (
+    //         <span key={index}>{arrival.LINE} | {arrival.DIRECTION} | {arrival.STATION} | {arrival.TRAIN_ID} | {arrival.NEXT_ARR}<br /></span>
+    //     );
     //   });
+  }
+
+  _handleSelectLine = (event) => {
+    const val = event.target.value
+    console.log("Selected Value: ", val);
+
+    if (val === "All") {
+        this._resetToDefaults();
+    } else {
+        let newArrivals = sampleData.realtimeArrivalSample.filter(arr => arr.LINE === val.toUpperCase())
+        let newStationNames = sampleData.stationNames.filter(stn => stn.line === val.toUpperCase())
+    
+        let newDirections = [];
+        if (val === "Blue" || val === "Green") {newDirections = ["Both", "E", "W"];}
+        else if (val === "Gold" || val === "Red") {newDirections = ["Both", "N", "S"];}
+        else {newDirections = ["All", "N", "S", "E", "W"];}
+    
+    
+        this.setState({
+            arrivals: newArrivals,
+            stationNames: newStationNames,
+            directions: newDirections
+        })
+    }
+
+
+
   }
 
 }
@@ -72,23 +98,3 @@ export default Stations;
         // "TRAIN_ID":"103206",
         // "WAITING_SECONDS":"-48",
         // "WAITING_TIME":"Boarding"
-
-        // {/* <table><tbody>                
-        //     {this.state.arrivals.map((item, index) => {
-        //                 return (
-        //                         <tr key={index}>
-        //                             <td>{item.STATION}</td>
-        //                             <td>{item.LINE}</td>
-        //                             <td>{item.DIRECTION}</td>
-        //                             <td>{item.TRAIN_ID}</td>
-        //                             <td>{item.NEXT_ARR}</td>
-        //                         </tr>
-        //                 );            
-        //             })}
-        //     </tbody>
-        //     </table>
-
-        //     <div className="coffeeRunContainer">
-        //         <CoffeeForm handleSubmit={this._submitOrder} />
-        //         <CoffeeList orders={this.state.orders} />
-        //     </div> */}

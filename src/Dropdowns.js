@@ -6,7 +6,7 @@ const Dropdowns = props => {
         let k = 0;
         optionList = props.opts.map(opt => {
             k++;
-            return <option key={k} value={opt.toLowerCase()}>{opt}</option>
+            return <option key={k} value={opt}>{opt}</option>
         });
     } else {
         let k = 0;
@@ -14,15 +14,14 @@ const Dropdowns = props => {
         props.opts.forEach(opt => {
             k++;
             optionList.push(
-                <option key={k} value={opt.station.toLowerCase()}>{opt.station}</option>
+                <option key={k} value={opt.station}>{opt.station}</option>
             )
         })
     }
 
     return (  
         <div>
-            {props.label}: 
-            <select name={props.name} onChange={(event) => props.handleChange(event)}>
+            {props.label}:  <select name={props.name} onChange={(event) => props.handleChange(event)}>
                 {optionList}
             </select>
         </div>

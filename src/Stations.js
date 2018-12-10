@@ -9,7 +9,8 @@ class Stations extends Component {
     this.state = {
       arrivals: sampleData.realtimeArrivalSample,
       stationNames: sampleData.stationNames,
-      lineNames: ["All", "Blue", "Green", "Orange", "Red"]
+      lineNames: ["All", "Blue", "Green", "Orange", "Red"],
+      directions: ["All", "N", "S", "E", "W"]
     }
   }
 
@@ -17,35 +18,32 @@ class Stations extends Component {
     return (  
         <div>
             <h2>Station Arrivals</h2>
-            <Dropdowns label="Line" name="LineName" opts={this.state.lineNames}/>
-            <Dropdowns label="Station" name="StationName" opts={this.state.stationNames}/>
+            <div className="filters">
+                <Dropdowns
+                    label="Line" name="LineName"
+                    opts={this.state.lineNames}
+                    handleChange={this._handleSelect}
+                />
+                <Dropdowns
+                    label="Direction" name="Direction"
+                    opts={this.state.directions}
+                    handleChange={this._handleSelect}
+                />
+                <Dropdowns
+                    label="Station" name="StationName"
+                    opts={this.state.stationNames}
+                    handleChange={this._handleSelect}
+                />
+            </div>
             <p>{this._display(this.state.arrivals)}</p>
-            {/* <table><tbody>                
-            {this.state.arrivals.map((item, index) => {
-                        return (
-                                <tr key={index}>
-                                    <td>{item.STATION}</td>
-                                    <td>{item.LINE}</td>
-                                    <td>{item.DIRECTION}</td>
-                                    <td>{item.TRAIN_ID}</td>
-                                    <td>{item.NEXT_ARR}</td>
-                                </tr>
-                        );            
-                    })}
-            </tbody>
-            </table>
-
-            <div className="coffeeRunContainer">
-                <CoffeeForm handleSubmit={this._submitOrder} />
-                <CoffeeList orders={this.state.orders} />
-            </div> */}
+            
         </div>
     );
   }
 
   _display(arrs) {
-      console.table(arrs);
-      console.table(this.state.stationNames);
+    //   console.table(arrs);
+    //   console.table(this.state.stationNames);
       return arrs.map((arrival, index) => {
         return (
             <span key={index}>{arrival.STATION} | {arrival.LINE} | {arrival.DIRECTION} | {arrival.TRAIN_ID} | {arrival.NEXT_ARR}<br /></span>
@@ -53,10 +51,12 @@ class Stations extends Component {
       });
   }
 
-  _submitOrder = (order) => {
-      this.setState({
-        orders: [...this.state.orders, order]
-      });
+  _handleSelect = (event) => {
+      const val = event.target.value
+      console.log("Selected Value: ", val);
+    //   this.setState({
+    //     orders: [...this.state.orders, order]
+    //   });
   }
 
 }
@@ -72,3 +72,23 @@ export default Stations;
         // "TRAIN_ID":"103206",
         // "WAITING_SECONDS":"-48",
         // "WAITING_TIME":"Boarding"
+
+        // {/* <table><tbody>                
+        //     {this.state.arrivals.map((item, index) => {
+        //                 return (
+        //                         <tr key={index}>
+        //                             <td>{item.STATION}</td>
+        //                             <td>{item.LINE}</td>
+        //                             <td>{item.DIRECTION}</td>
+        //                             <td>{item.TRAIN_ID}</td>
+        //                             <td>{item.NEXT_ARR}</td>
+        //                         </tr>
+        //                 );            
+        //             })}
+        //     </tbody>
+        //     </table>
+
+        //     <div className="coffeeRunContainer">
+        //         <CoffeeForm handleSubmit={this._submitOrder} />
+        //         <CoffeeList orders={this.state.orders} />
+        //     </div> */}

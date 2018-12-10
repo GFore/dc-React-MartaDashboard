@@ -1,8 +1,8 @@
 import React from 'react';
 
-const Dropdowns = (props) => {
+const Dropdowns = props => {
     let optionList = [];
-    if (props.label === "Line") {
+    if (props.label !== "Station") {
         let k = 0;
         optionList = props.opts.map(opt => {
             k++;
@@ -10,6 +10,7 @@ const Dropdowns = (props) => {
         });
     } else {
         let k = 0;
+        optionList.push(<option key={k} value="all">All Stations</option>);
         props.opts.forEach(opt => {
             k++;
             optionList.push(
@@ -20,7 +21,8 @@ const Dropdowns = (props) => {
 
     return (  
         <div>
-            {props.label}: <select name={props.name}>
+            {props.label}: 
+            <select name={props.name} onChange={(event) => props.handleChange(event)}>
                 {optionList}
             </select>
         </div>

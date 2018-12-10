@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as sampleData from './sampleData';
-// import CoffeeForm from './CoffeeForm';
+import Dropdowns from './Dropdowns';
 // import CoffeeList from './CoffeeList';
 
 class Stations extends Component {
@@ -8,7 +8,8 @@ class Stations extends Component {
     super(props);
     this.state = {
       arrivals: sampleData.realtimeArrivalSample,
-      stationNames: sampleData.stationNames
+      stationNames: sampleData.stationNames,
+      lineNames: ["All", "Blue", "Green", "Orange", "Red"]
     }
   }
 
@@ -16,6 +17,8 @@ class Stations extends Component {
     return (  
         <div>
             <h2>Station Arrivals</h2>
+            <Dropdowns label="Line" name="LineName" opts={this.state.lineNames}/>
+            <Dropdowns label="Station" name="StationName" opts={this.state.stationNames}/>
             <p>{this._display(this.state.arrivals)}</p>
             {/* <table><tbody>                
             {this.state.arrivals.map((item, index) => {

@@ -5,9 +5,15 @@ import ArrivalsList from './ArrivalsList';
 
 const defaults = {
     arrivals: sampleData.realtimeArrivalSample,
-    stationNames: sampleData.stationNames,
+    stationNames: ["All", ...sampleData.stationNames],
     lineNames: ["All", "Blue", "Gold", "Green", "Red"],
-    directions: ["All", "N", "S", "E", "W"]
+    directions: ["All", "N", "S", "E", "W"],
+    lineIsFiltered: false,
+    directionIsFiltered: false,
+    stationIsFiltered: false,
+    lineVal: "All",
+    directionVal: "All",
+    stationVal: "All"
   };
 
 class Stations extends Component {
@@ -22,17 +28,22 @@ class Stations extends Component {
             <h2>Station Arrivals</h2>
             <div className="filters">
                 <Dropdowns
-                    label="Line" name="LineName"
+                    name="Line"
+                    selectedName={this.state.lineVal}
                     opts={this.state.lineNames}
-                    handleChange={this._handleSelectLine}
-                />
-                <Dropdowns
-                    label="Direction" name="Direction"
-                    opts={this.state.directions}
+                    // handleChange={this._handleSelectLine}
                     handleChange={this._handleSelect}
-                />
+                    />
                 <Dropdowns
-                    label="Station" name="StationName"
+                    name="Direction"
+                    selectedName={this.state.directionVal}
+                    opts={this.state.directions}
+                    // handleChange={this._handleSelectDirection}
+                    handleChange={this._handleSelect}
+                    />
+                <Dropdowns
+                    name="Station"
+                    selectedName={this.state.stationVal}
                     opts={this.state.stationNames}
                     handleChange={this._handleSelect}
                 />
@@ -49,7 +60,7 @@ class Stations extends Component {
   }
 
   _display(arrs) {
-      console.table(arrs);
+      console.dir(sampleData.stations);
       console.table(this.state.stationNames);
     //   return arrs.map((arrival, index) => {
     //     return (
@@ -58,31 +69,116 @@ class Stations extends Component {
     //   });
   }
 
+  _handleSelect = (event) => {
+    const selectedName = event.target.name;
+    const selectedValue = event.target.value;
+    const currentLine = this.state.lineVal;
+    const currentDir =  this.state.directionVal;
+    const currentStn =  this.state.stationVal;
+
+    const newLine = (selectedName === "Line") ? selectedValue : currentLine;
+    const newDir = (selectedName === "Direction") ? selectedValue : currentDir;
+    const newStn = (selectedName === "Station") ? selectedValue : currentStn;
+
+    console.log("Current: ", currentLine, currentDir, currentStn);
+    console.log("New vals: ", newLine, newDir, newStn);
+
+    if (newLine === "All" && newDir === "All" && newStn === "All") {
+        this._resetToDefaults();
+    } else {
+        console.log("new stuff")
+        let newArrivals = sampleData.realtimeArrivalSample;
+        if (newLine !== "All") {
+            newArrivals = newArrivals.filter(arr => arr.LINE === newLine.toUpperCase())
+        };
+        if (newDir !== "All") {
+            newArrivals = newArrivals.filter(arr => arr.DIRECTION === newDir)
+        };
+        if (newStn !== "All") {
+            newArrivals = newArrivals.filter(arr => arr.STATION === newStn)
+        };
+
+        this.setState({
+            arrivals: newArrivals,
+            lineVal: newLine,
+            directionVal: newDir,
+            stationVal: newStn
+        })
+    }
+  }
+
   _handleSelectLine = (event) => {
+      console.log("Selected Value: ", event.target.name, " value: ", event.target.value);
+    const val = event.target.value
+
+    if (val === "All") {
+        this._resetToDefaults();
+    } else {
+        let newArrivals = (this.state.directionIsFiltered || this.state.stationIsFiltered)
+                            ? this.state.arrivals
+                            : sampleData.realtimeArrivalSample;
+        newArrivals = newArrivals.filter(arr => arr.LINE === val.toUpperCase());
+
+        let newDirections = [];
+        if (this.state.directionIsFiltered) {
+            newDirections = this.state.directions;
+        } else {
+            if (val === "Blue" || val === "Green") {newDirections = ["Both", "E", "W"];}
+            else if (val === "Gold" || val === "Red") {newDirections = ["Both", "N", "S"];}
+            else {newDirections = ["All", "N", "S", "E", "W"];}
+        }
+        
+        let newStationNames = [];
+        if (this.state.stationIsFiltered) {
+            newStationNames = this.state.stationNames;
+        } else {
+            newStationNames = sampleData.stationNames.filter(stn => stn.line === val.toUpperCase());
+        }
+    
+        this.setState({
+            arrivals: newArrivals,
+            stationNames: newStationNames,
+            directions: newDirections,
+            lineIsFiltered: true
+        })
+    }
+  }
+
+  _handleSelectDirection = (event) => {
     const val = event.target.value
     console.log("Selected Value: ", val);
 
     if (val === "All") {
         this._resetToDefaults();
     } else {
-        let newArrivals = sampleData.realtimeArrivalSample.filter(arr => arr.LINE === val.toUpperCase())
-        let newStationNames = sampleData.stationNames.filter(stn => stn.line === val.toUpperCase())
-    
-        let newDirections = [];
-        if (val === "Blue" || val === "Green") {newDirections = ["Both", "E", "W"];}
-        else if (val === "Gold" || val === "Red") {newDirections = ["Both", "N", "S"];}
-        else {newDirections = ["All", "N", "S", "E", "W"];}
-    
+        let newArrivals = (this.state.lineIsFiltered || this.state.stationIsFiltered)
+                            ? this.state.arrivals
+                            : sampleData.realtimeArrivalSample;
+        newArrivals = newArrivals.filter(arr => arr.DIRECTION === val.toUpperCase());
+
+        let newLineNames = [];
+        if (this.state.lineIsFiltered) {
+            newLineNames = this.state.lineNames;
+        } else {
+            if (val === "N" || val === "S") {newLineNames = ["Both", "Gold", "Red"];}
+            else if (val === "E" || val === "W") {newLineNames = ["Both", "Blue", "Green"];}
+            else {newLineNames = ["All", "Blue", "Gold", "Green", "Red"];}
+        }
+        
+        let newStationNames = [];
+        if (this.state.stationIsFiltered) {
+            newStationNames = this.state.stationNames;
+        } else {
+            newStationNames = sampleData.stationNames.filter(stn => stn.dir === val.toUpperCase());
+        }
     
         this.setState({
             arrivals: newArrivals,
             stationNames: newStationNames,
-            directions: newDirections
+            lineNames: newLineNames,
+            directionIsFiltered: true
         })
     }
-
-
-
   }
 
 }

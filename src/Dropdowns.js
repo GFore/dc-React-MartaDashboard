@@ -1,27 +1,15 @@
 import React from 'react';
 
 const Dropdowns = props => {
-    let optionList = [];
-    if (props.label !== "Station") {
-        let k = 0;
-        optionList = props.opts.map(opt => {
-            k++;
-            return <option key={k} value={opt}>{opt}</option>
-        });
-    } else {
-        let k = 0;
-        optionList.push(<option key={k} value="all">All Stations</option>);
-        props.opts.forEach(opt => {
-            k++;
-            optionList.push(
-                <option key={k} value={opt.station}>{opt.station}</option>
-            )
-        })
-    }
+    let optionList = props.opts.map((opt, index) => {
+        let selectedAttr = "";
+        if (opt === props.selectedName) {selectedAttr = "selected"};
+        return <option key={index} value={opt} {...selectedAttr}>{opt}</option>
+    });
 
     return (  
         <div>
-            {props.label}:  <select name={props.name} onChange={(event) => props.handleChange(event)}>
+            {props.name}:  <select name={props.name} onChange={(event) => props.handleChange(event)}>
                 {optionList}
             </select>
         </div>

@@ -1,3 +1,16 @@
+## USAGE
+A MARTA API Key is required for fetching train data. Create a config.js file in the src folder and add the following two lines:
+
+```javascript
+const MARTA_APIKEY1 = '<YOUR_API_KEY_HERE>';
+
+export {MARTA_APIKEY1}
+```
+
+Replace **_<YOUR_API_KEY_HERE>_** with your API key, which you can obtain for free by registering on the [Marta Developer Resources page](https://www.itsmarta.com/developer-reg-rtt.aspx).
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

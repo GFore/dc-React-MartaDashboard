@@ -51,19 +51,10 @@ realtimeArrivalSample.forEach(arrival => {
     }
 
 });
-// realtimeArrivalSample.forEach(arrival => {
-//     stationNames.push({
-//         station: `${arrival.LINE}:${arrival.STATION}`,
-//         name: arrival.STATION,
-//         line: arrival.LINE,
-//         dir: arrival.DIRECTION
-//     })
-// });
-//stationNames.sort((a,b) => (a.station > b.station) ? 1 : ((b.station > a.station) ? -1 : 0));
+
 stationNames.sort();
 stations.sort((a,b) => (a.name > b.name) ? 1 : ((b.name > a.name) ? -1 : 0));
 
-//stationNames = stationNames.filter((stn, index, self) => self.findIndex(t => t.name === stn.name && t.line === stn.line) === index);
 realtimeArrivalSample.sort((a,b) => ((a.LINE + a.DIRECTION + a.STATION) > (b.LINE + b.DIRECTION + b.STATION)) ? 1
                                      : (((b.LINE + b.DIRECTION + b.STATION) > (a.LINE + a.DIRECTION + a.STATION)) ? -1 : 0));
 

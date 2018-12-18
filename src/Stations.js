@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import * as sampleData from './sampleData';
 import * as config from './config';
+import {sortArrivals, getStationNames} from './helpers';
 import Dropdowns from './Dropdowns';
 import ArrivalsList from './ArrivalsList';
 
-const MARTA_API_URL = 'https://my-little-cors-proxy.herokuapp.com/http://developer.itsmarta.com/RealtimeTrain/RestServiceNextTrain/GetRealtimeArrivals?apikey=' + config.MARTA_APIKEY1;
+const corsProxyURL = 'https://my-little-cors-proxy.herokuapp.com/';
+const MARTA_API_URL = 'http://developer.itsmarta.com/RealtimeTrain/RestServiceNextTrain/GetRealtimeArrivals';
+const myApiKey = '?apikey=' + config.MARTA_APIKEY1;
 
 class Stations extends Component {
   constructor(props) {
@@ -24,25 +27,12 @@ class Stations extends Component {
 
 
   componentDidMount() {
-    fetch(MARTA_API_URL)
+    fetch(corsProxyURL + MARTA_API_URL + myApiKey)
             .then(result => result.json())
             .then(arrivalsArray => {
-                let stationNames = [];
-                arrivalsArray = Object.values(arrivalsArray);
+                arrivalsArray = sortArrivals(arrivalsArray);
+                let stationNames = getStationNames(arrivalsArray);
 
-                
-                arrivalsArray.forEach(arrival => {
-                    if (!stationNames.includes(arrival.STATION)) {
-                        stationNames.push(arrival.STATION);
-                    }
-                });
-                
-                stationNames.sort().unshift("ALL");
-                
-                arrivalsArray.sort((a,b) => ((a.LINE + a.DIRECTION + a.STATION) > (b.LINE + b.DIRECTION + b.STATION)) ? 1
-                : (((b.LINE + b.DIRECTION + b.STATION) > (a.LINE + a.DIRECTION + a.STATION)) ? -1 : 0));
-                
-                //console.table(arrivalsArray);
                 this.setState({
                     resetArrivals: arrivalsArray,
                     resetStationNames: stationNames,
@@ -50,26 +40,13 @@ class Stations extends Component {
                     stationNames: stationNames
                 }, () => {
                     setInterval(() => {
-                        console.log("getting data");
-                        fetch(MARTA_API_URL)
-                            .then(result => result.json())
-                            .then(arrivalsArray => {
-                                let stationNames = [];
-                                arrivalsArray = Object.values(arrivalsArray);
-                
+                        console.log("refreshing data");
+                        fetch(corsProxyURL + MARTA_API_URL + myApiKey)
+                        .then(result => result.json())
+                        .then(arrivalsArray => {
+                                arrivalsArray = sortArrivals(arrivalsArray);
+                                let stationNames = getStationNames(arrivalsArray);
                                 
-                                arrivalsArray.forEach(arrival => {
-                                    if (!stationNames.includes(arrival.STATION)) {
-                                        stationNames.push(arrival.STATION);
-                                    }
-                                });
-                                
-                                stationNames.sort().unshift("ALL");
-                                
-                                arrivalsArray.sort((a,b) => ((a.LINE + a.DIRECTION + a.STATION) > (b.LINE + b.DIRECTION + b.STATION)) ? 1
-                                : (((b.LINE + b.DIRECTION + b.STATION) > (a.LINE + a.DIRECTION + a.STATION)) ? -1 : 0));
-                                
-                                //console.table(arrivalsArray);
                                 this.setState({
                                     resetArrivals: arrivalsArray,
                                     resetStationNames: stationNames
@@ -78,9 +55,6 @@ class Stations extends Component {
                     }, 300000);
                 });
             });
-
-    
-
   }
 
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as sampleData from './sampleData';
 import * as config from './config';
-import {sortArrivals, getStationNames} from './helpers';
+import {sortArrivals, getStationNames, filterArrivals, getNameLists} from './helpers';
 import Dropdowns from './Dropdowns';
 import ArrivalsList from './ArrivalsList';
 
@@ -25,19 +25,20 @@ class Stations extends Component {
       }
   }
 
-
   componentDidMount() {
     fetch(corsProxyURL + MARTA_API_URL + myApiKey)
             .then(result => result.json())
             .then(arrivalsArray => {
                 arrivalsArray = sortArrivals(arrivalsArray);
-                let stationNames = getStationNames(arrivalsArray);
+                const nameLists = getNameLists(arrivalsArray);
 
                 this.setState({
                     resetArrivals: arrivalsArray,
-                    resetStationNames: stationNames,
+                    resetStationNames: nameLists.stations,
                     arrivals: arrivalsArray,
-                    stationNames: stationNames
+                    stationNames: nameLists.stations,
+                    lineNames: nameLists.lines,
+                    directions: nameLists.directions
                 }, () => {
                     setInterval(() => {
                         console.log("refreshing data");
@@ -45,14 +46,20 @@ class Stations extends Component {
                         .then(result => result.json())
                         .then(arrivalsArray => {
                                 arrivalsArray = sortArrivals(arrivalsArray);
-                                let stationNames = getStationNames(arrivalsArray);
+                                const stationNames = getStationNames(arrivalsArray);
+                                const newArrivals = filterArrivals (arrivalsArray, this.state.lineVal, this.state.stationVal, this.state.directionVal);
+                                const nameLists = getNameLists(newArrivals);
                                 
                                 this.setState({
                                     resetArrivals: arrivalsArray,
-                                    resetStationNames: stationNames
+                                    resetStationNames: stationNames,
+                                    arrivals: newArrivals,
+                                    stationNames: nameLists.stations,
+                                    lineNames: nameLists.lines,
+                                    directions: nameLists.directions
                                 });
                             })
-                    }, 300000);
+                    }, 500000);
                 });
             });
   }
@@ -110,45 +117,34 @@ class Stations extends Component {
   }
 
   _handleSelect = (event) => {
-    const selectedName = event.target.name;
-    const selectedValue = event.target.value;
-    const currentLine = this.state.lineVal;
-    const currentDir =  this.state.directionVal;
-    const currentStn =  this.state.stationVal;
+    const selection = {name: event.target.name, value: event.target.value};
 
-    const newLine = (selectedName === "Line") ? selectedValue : currentLine;
-    const newDir = (selectedName === "Direction") ? selectedValue : currentDir;
-    const newStn = (selectedName === "Station") ? selectedValue : currentStn;
+    const newLine = (selection.name === "Line") ? selection.value : this.state.lineVal;
+    const newDir = (selection.name === "Direction") ? selection.value : this.state.directionVal;
+    const newStn = (selection.name === "Station") ? selection.value : this.state.stationVal;
 
     if (newLine === "ALL" && newDir === "ALL" && newStn === "ALL") {
         this._resetToDefaults();
     } else {
-        let newArrivals = this.state.resetArrivals;
-        if (newLine !== "ALL") {newArrivals = newArrivals.filter(arr => arr.LINE === newLine)};
-        if (newDir !== "ALL") {newArrivals = newArrivals.filter(arr => arr.DIRECTION === newDir)};
-        if (newStn !== "ALL") {newArrivals = newArrivals.filter(arr => arr.STATION === newStn)};
-
-       let newStationNames = [...new Set(newArrivals.map(arr => arr.STATION).sort())];
-       let newLineNames = [...new Set(newArrivals.map(arr => arr.LINE).sort())];
-       let newDirections = [...new Set(newArrivals.map(arr => arr.DIRECTION).sort())];
+        const newArrivals = filterArrivals (this.state.resetArrivals, newLine, newStn, newDir);
+        const nameLists = getNameLists(newArrivals);
 
        // save the current drop-down list for the selected item
-       if (selectedName === "Line") {newLineNames = this.state.lineNames};
-       if (selectedName === "Direction") {newDirections = this.state.directions};
-       if (selectedName === "Station") {newStationNames = this.state.stationNames};
+       if (selection.name === "Line") {nameLists.lines = this.state.lineNames};
+       if (selection.name === "Direction") {nameLists.directions = this.state.directions};
+       if (selection.name === "Station") {nameLists.stations = this.state.stationNames};
        
        this.setState({
             arrivals: newArrivals,
-            stationNames: newStationNames,
-            lineNames: newLineNames,
-            directions: newDirections,
+            stationNames: nameLists.stations,
+            lineNames: nameLists.lines,
+            directions: nameLists.directions,
             lineVal: newLine,
             directionVal: newDir,
             stationVal: newStn
         })
     }
   }
-
 
 
 }

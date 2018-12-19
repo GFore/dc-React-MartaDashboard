@@ -14,6 +14,14 @@ function getStationNames(arvlArray) {
     return nameList;
 }
 
+function getNameLists(arvlArray) {
+    return {
+            lines: [...new Set(arvlArray.map(arr => arr.LINE).sort())],
+            stations: [...new Set(arvlArray.map(arr => arr.STATION).sort())],
+            directions: [...new Set(arvlArray.map(arr => arr.DIRECTION).sort())]
+        };
+}
+
 // sort the arrivals array by Line, then Direction, then station
 function sortArrivals (arvlArray) {
     arvlArray = Object.values(arvlArray);
@@ -24,8 +32,20 @@ function sortArrivals (arvlArray) {
     return arvlArray;
 }
 
+// filter the arrivals array by the selected values for line, station, and direction
+function filterArrivals (arvlArray, filterLine, filterStn, filterDir) {
+    if (filterLine !== "ALL") {arvlArray = arvlArray.filter(arr => arr.LINE === filterLine)};
+    if (filterStn !== "ALL") {arvlArray = arvlArray.filter(arr => arr.STATION === filterStn)};
+    if (filterDir !== "ALL") {arvlArray = arvlArray.filter(arr => arr.DIRECTION === filterDir)};
+
+    return arvlArray;
+}
+
+
 
 export {
     sortArrivals,
-    getStationNames
+    getStationNames,
+    filterArrivals,
+    getNameLists
 }

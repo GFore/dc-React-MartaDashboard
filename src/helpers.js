@@ -43,7 +43,7 @@ function filterArrivals (arvlArray, filterLine, filterStn, filterDir) {
 
 function getTimerRateInMS(timeName) {
     const timesInMS = [5000, 10000, 20000, 30000, 60000, 120000, 300000, 600000];
-    const timeNameArray = ["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2min", "5 min", "10 min"];
+    const timeNameArray = ["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2 min", "5 min", "10 min"];
     const pos = timeNameArray.indexOf(timeName);
     return (pos !== -1) ? timesInMS[pos] : "STOPPED";
 }

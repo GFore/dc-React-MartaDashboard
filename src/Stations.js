@@ -93,7 +93,7 @@ class Stations extends Component {
                 <Dropdowns
                     name="Refresh Rate"
                     selectedName={this.state.refreshRate}
-                    opts={["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2min", "5 min", "10 min"]}
+                    opts={["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2 min", "5 min", "10 min"]}
                     handleChange={this._handleNewRefreshRate}
                 />
             </div>

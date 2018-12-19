@@ -8,6 +8,7 @@ const Dropdowns = props => {
     return (  
         <div>
             {props.name}:  <select name={props.name} value={props.selectedName} onChange={(event) => props.handleChange(event)}>
+                <option value="ALL">ALL</option>
                 {optionList}
             </select>
         </div>

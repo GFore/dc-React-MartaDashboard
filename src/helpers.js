@@ -9,7 +9,7 @@ function getStationNames(arvlArray) {
             nameList.push(arrival.STATION);
         }
     });
-    nameList.sort().unshift("ALL");
+    nameList.sort();
 
     return nameList;
 }

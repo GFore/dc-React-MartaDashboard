@@ -17,8 +17,8 @@ class Stations extends Component {
         resetStationNames: [],
         arrivals: [],
         stationNames: [],
-        lineNames: ["ALL", "BLUE", "GOLD", "GREEN", "RED"],
-        directions: ["ALL", "N", "S", "E", "W"],
+        lineNames: ["BLUE", "GOLD", "GREEN", "RED"],
+        directions: ["N", "S", "E", "W"],
         lineVal: "ALL",
         directionVal: "ALL",
         stationVal: "ALL"
@@ -83,19 +83,17 @@ class Stations extends Component {
                 />
             </div>
             <ArrivalsList arrivals={this.state.arrivals}/>
-            {/* <p>{this._display(this.state.arrivals)}</p> */}
             
         </div>
     );
   }
 
   _resetToDefaults() {
-    // this.setState({...defaults});
     this.setState({
         arrivals: this.state.resetArrivals,
         stationNames: this.state.resetStationNames,
-        lineNames: ["ALL", "BLUE", "GOLD", "GREEN", "RED"],
-        directions: ["ALL", "N", "S", "E", "W"],
+        lineNames: ["BLUE", "GOLD", "GREEN", "RED"],
+        directions: ["N", "S", "E", "W"],
         lineVal: "ALL",
         directionVal: "ALL",
         stationVal: "ALL"
@@ -112,7 +110,6 @@ class Stations extends Component {
   }
 
   _handleSelect = (event) => {
-      //I know, Uncle Bob, this function is way too long
     const selectedName = event.target.name;
     const selectedValue = event.target.value;
     const currentLine = this.state.lineVal;
@@ -131,20 +128,9 @@ class Stations extends Component {
         if (newDir !== "ALL") {newArrivals = newArrivals.filter(arr => arr.DIRECTION === newDir)};
         if (newStn !== "ALL") {newArrivals = newArrivals.filter(arr => arr.STATION === newStn)};
 
-       let newStationNames = [];
-       let newLineNames = [];
-       let newDirections = [];
-       newArrivals.forEach(arr => {
-           if (!newStationNames.includes(arr.STATION)) {newStationNames.push(arr.STATION)};
-           if (!newLineNames.includes(arr.LINE)) {newLineNames.push(arr.LINE)};
-           if (!newDirections.includes(arr.DIRECTION)) {newDirections.push(arr.DIRECTION)};
-       });
-
-       newLineNames.sort();
-       newDirections.sort();
-       newStationNames.unshift("ALL");
-       newLineNames.unshift("ALL");
-       newDirections.unshift("ALL");
+       let newStationNames = [...new Set(newArrivals.map(arr => arr.STATION).sort())];
+       let newLineNames = [...new Set(newArrivals.map(arr => arr.LINE).sort())];
+       let newDirections = [...new Set(newArrivals.map(arr => arr.DIRECTION).sort())];
 
        // save the current drop-down list for the selected item
        if (selectedName === "Line") {newLineNames = this.state.lineNames};

@@ -1,6 +1,5 @@
 
-// receive array of all arrivals for all stations and return a sorted array of
-// station names, with "All" inserted as the first entry for use in drop-down
+// from an array of arrivals, extract a sorted list of unique station names
 function getStationNames(arvlArray) {
     let nameList = [];
 
@@ -14,6 +13,7 @@ function getStationNames(arvlArray) {
     return nameList;
 }
 
+// from an array of arrivals, extract separate unique lists of lines, stations, and directions 
 function getNameLists(arvlArray) {
     return {
             lines: [...new Set(arvlArray.map(arr => arr.LINE).sort())],
@@ -41,11 +41,18 @@ function filterArrivals (arvlArray, filterLine, filterStn, filterDir) {
     return arvlArray;
 }
 
+function getTimerRateInMS(timeName) {
+    const timesInMS = [5000, 10000, 20000, 30000, 60000, 120000, 300000, 600000];
+    const timeNameArray = ["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2min", "5 min", "10 min"];
+    const pos = timeNameArray.indexOf(timeName);
+    return (pos !== -1) ? timesInMS[pos] : "STOPPED";
+}
 
 
 export {
     sortArrivals,
     getStationNames,
     filterArrivals,
-    getNameLists
+    getNameLists,
+    getTimerRateInMS
 }

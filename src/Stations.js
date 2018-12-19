@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import * as sampleData from './sampleData';
 import * as config from './config';
-import {sortArrivals, getStationNames, filterArrivals, getNameLists} from './helpers';
+import {sortArrivals, getStationNames, filterArrivals, getNameLists, getTimerRateInMS} from './helpers';
 import Dropdowns from './Dropdowns';
 import ArrivalsList from './ArrivalsList';
 
@@ -21,47 +21,49 @@ class Stations extends Component {
         directions: ["N", "S", "E", "W"],
         lineVal: "ALL",
         directionVal: "ALL",
-        stationVal: "ALL"
+        stationVal: "ALL",
+        refreshRate: "10 sec"
       }
   }
 
   componentDidMount() {
     fetch(corsProxyURL + MARTA_API_URL + myApiKey)
-            .then(result => result.json())
-            .then(arrivalsArray => {
-                arrivalsArray = sortArrivals(arrivalsArray);
-                const nameLists = getNameLists(arrivalsArray);
+        .then(result => result.json())
+        .then(arrivalsArray => {
+            arrivalsArray = sortArrivals(arrivalsArray);
+            const nameLists = getNameLists(arrivalsArray);
 
-                this.setState({
-                    resetArrivals: arrivalsArray,
-                    resetStationNames: nameLists.stations,
-                    arrivals: arrivalsArray,
-                    stationNames: nameLists.stations,
-                    lineNames: nameLists.lines,
-                    directions: nameLists.directions
-                }, () => {
-                    setInterval(() => {
-                        console.log("refreshing data");
-                        fetch(corsProxyURL + MARTA_API_URL + myApiKey)
-                        .then(result => result.json())
-                        .then(arrivalsArray => {
-                                arrivalsArray = sortArrivals(arrivalsArray);
-                                const stationNames = getStationNames(arrivalsArray);
-                                const newArrivals = filterArrivals (arrivalsArray, this.state.lineVal, this.state.stationVal, this.state.directionVal);
-                                const nameLists = getNameLists(newArrivals);
-                                
-                                this.setState({
-                                    resetArrivals: arrivalsArray,
-                                    resetStationNames: stationNames,
-                                    arrivals: newArrivals,
-                                    stationNames: nameLists.stations,
-                                    lineNames: nameLists.lines,
-                                    directions: nameLists.directions
-                                });
-                            })
-                    }, 500000);
-                });
+            this.setState({
+                resetArrivals: arrivalsArray,
+                resetStationNames: nameLists.stations,
+                arrivals: arrivalsArray,
+                stationNames: nameLists.stations,
+                lineNames: nameLists.lines,
+                directions: nameLists.directions
+            }, () => {
+                let timerId = setInterval(() => {
+                    console.log("refreshing data");
+                    fetch(corsProxyURL + MARTA_API_URL + myApiKey)
+                    .then(result => result.json())
+                    .then(arrivalsArray => {
+                            arrivalsArray = sortArrivals(arrivalsArray);
+                            const stationNames = getStationNames(arrivalsArray);
+                            const newArrivals = filterArrivals (arrivalsArray, this.state.lineVal, this.state.stationVal, this.state.directionVal);
+                            const nameLists = getNameLists(newArrivals);
+
+                            this.setState({
+                                resetArrivals: arrivalsArray,
+                                resetStationNames: stationNames,
+                                arrivals: newArrivals,
+                                stationNames: nameLists.stations,
+                                lineNames: nameLists.lines,
+                                directions: nameLists.directions,
+                                timerId: timerId
+                            });
+                        })
+                }, getTimerRateInMS(this.state.refreshRate));
             });
+        });
   }
 
 
@@ -87,6 +89,12 @@ class Stations extends Component {
                     selectedName={this.state.stationVal}
                     opts={this.state.stationNames}
                     handleChange={this._handleSelect}
+                />
+                <Dropdowns
+                    name="Refresh Rate"
+                    selectedName={this.state.refreshRate}
+                    opts={["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2min", "5 min", "10 min"]}
+                    handleChange={this._handleNewRefreshRate}
                 />
             </div>
             <ArrivalsList arrivals={this.state.arrivals}/>
@@ -145,7 +153,53 @@ class Stations extends Component {
         })
     }
   }
+  _handleNewRefreshRate = (event) => {
+        window.clearInterval(this.state.timerId);       // clear the existing refresh setInterval
+        console.log(`refresh timer #${this.state.timerId} stopped`);
 
+        let refreshInterval = event.target.value;
+        console.log(`new interval: ${refreshInterval}`)
+        if (refreshInterval === "STOPPED") {
+            this.setState({
+                refreshRate: refreshInterval                    
+            })
+        } else {
+            fetch(corsProxyURL + MARTA_API_URL + myApiKey)
+                .then(result => result.json())
+                .then(arrivalsArray => {
+                    arrivalsArray = sortArrivals(arrivalsArray);
+                    const stationNames = getStationNames(arrivalsArray);
+    
+                    this.setState({
+                        resetArrivals: arrivalsArray,
+                        resetStationNames: stationNames,
+                        refreshRate: refreshInterval                    
+                    }, () => {
+                            let timerId = setInterval(() => {
+                            console.log("refreshing data");
+                            fetch(corsProxyURL + MARTA_API_URL + myApiKey)
+                            .then(result => result.json())
+                            .then(arrivalsArray => {
+                                    arrivalsArray = sortArrivals(arrivalsArray);
+                                    const stationNames = getStationNames(arrivalsArray);
+                                    const newArrivals = filterArrivals (arrivalsArray, this.state.lineVal, this.state.stationVal, this.state.directionVal);
+                                    const nameLists = getNameLists(newArrivals);
+    
+                                    this.setState({
+                                        resetArrivals: arrivalsArray,
+                                        resetStationNames: stationNames,
+                                        arrivals: newArrivals,
+                                        stationNames: nameLists.stations,
+                                        lineNames: nameLists.lines,
+                                        directions: nameLists.directions,
+                                        timerId: timerId
+                                    });
+                                })
+                            }, getTimerRateInMS(refreshInterval));
+                        });
+                });
+        };
+  }
 
 }
 

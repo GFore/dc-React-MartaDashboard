@@ -1,3 +1,5 @@
+**__NOTE: (12/20/18) The heroku proxy is currently not working so CORS limitations are preventing the app from getting live data from the MARTA API. Sample data will be used until the proxy is resolved__**
+
 ## USAGE
 A MARTA API Key is required for fetching train data. Create a config.js file in the src folder and add the following two lines:
 
@@ -10,9 +12,9 @@ export {MARTA_APIKEY1}
 Replace **_<YOUR_API_KEY_HERE>_** with your API key, which you can obtain for free by registering on the [Marta Developer Resources page](https://www.itsmarta.com/developer-reg-rtt.aspx).
 
 ---
-
+<details><summary>
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+  </summary>
 ## Available Scripts
 
 In the project directory, you can run:
@@ -52,3 +54,4 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+</details>

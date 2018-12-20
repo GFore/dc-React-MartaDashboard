@@ -63,6 +63,16 @@ class Stations extends Component {
                         })
                 }, getTimerRateInMS(this.state.refreshRate));
             });
+        })
+        .catch(err => {
+            console.log("BAM!: ", err);
+            // if the API call fails, then load sample data into state
+            this.setState({
+                resetArrivals: sampleData.realtimeArrivalSample,
+                resetStationNames: sampleData.stationNames,
+                arrivals: sampleData.realtimeArrivalSample,
+                stationNames: sampleData.stationNames
+            })        
         });
   }
 

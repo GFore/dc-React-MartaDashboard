@@ -1,5 +1,3 @@
-**__NOTE: (12/20/18) The heroku proxy is currently not working so CORS limitations are preventing the app from getting live data from the MARTA API. Sample data will be used until the proxy is resolved__**
-
 ## USAGE
 A MARTA API Key is required for fetching train data. Create a config.js file in the src folder and add the following two lines:
 

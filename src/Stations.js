@@ -5,7 +5,8 @@ import {sortArrivals, getStationNames, filterArrivals, getNameLists, getTimerRat
 import Dropdowns from './Dropdowns';
 import ArrivalsList from './ArrivalsList';
 
-const corsProxyURL = 'https://my-little-cors-proxy.herokuapp.com/';
+const corsProxyURL = 'http://my-little-cors-proxy.herokuapp.com/';
+// const corsProxyURL = '';
 const MARTA_API_URL = 'http://developer.itsmarta.com/RealtimeTrain/RestServiceNextTrain/GetRealtimeArrivals';
 const myApiKey = '?apikey=' + config.MARTA_APIKEY1;
 
@@ -61,11 +62,21 @@ class Stations extends Component {
                                 timerId: timerId
                             });
                         })
+                    .catch(err => {
+                        console.log("BAM1!: ", err);
+                        // if the API call fails, then load sample data into state
+                        this.setState({
+                            resetArrivals: sampleData.realtimeArrivalSample,
+                            resetStationNames: sampleData.stationNames,
+                            arrivals: sampleData.realtimeArrivalSample,
+                            stationNames: sampleData.stationNames
+                        })
+                    })
                 }, getTimerRateInMS(this.state.refreshRate));
             });
         })
         .catch(err => {
-            console.log("BAM!: ", err);
+            console.log("BAM2!: ", err);
             // if the API call fails, then load sample data into state
             this.setState({
                 resetArrivals: sampleData.realtimeArrivalSample,
@@ -205,9 +216,29 @@ class Stations extends Component {
                                         timerId: timerId
                                     });
                                 })
+                            .catch(err => {
+                                console.log("BAM3!: ", err);
+                                // if the API call fails, then load sample data into state
+                                this.setState({
+                                    resetArrivals: sampleData.realtimeArrivalSample,
+                                    resetStationNames: sampleData.stationNames,
+                                    arrivals: sampleData.realtimeArrivalSample,
+                                    stationNames: sampleData.stationNames
+                                })        
+                            })
                             }, getTimerRateInMS(refreshInterval));
                         });
-                });
+                })
+            .catch(err => {
+                console.log("BAM4!: ", err);
+                // if the API call fails, then load sample data into state
+                this.setState({
+                    resetArrivals: sampleData.realtimeArrivalSample,
+                    resetStationNames: sampleData.stationNames,
+                    arrivals: sampleData.realtimeArrivalSample,
+                    stationNames: sampleData.stationNames
+                })        
+            });
         };
   }
 

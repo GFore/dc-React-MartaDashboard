@@ -10,9 +10,9 @@ export {MARTA_APIKEY1}
 Replace **_<YOUR_API_KEY_HERE>_** with your API key, which you can obtain for free by registering on the [Marta Developer Resources page](https://www.itsmarta.com/developer-reg-rtt.aspx).
 
 ---
-
+<details><summary>
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
-
+  </summary>
 ## Available Scripts
 
 In the project directory, you can run:
@@ -52,3 +52,4 @@ If you aren’t satisfied with the build tool and configuration choices, you can
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+</details>

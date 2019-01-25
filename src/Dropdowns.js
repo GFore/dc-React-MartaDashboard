@@ -11,10 +11,10 @@ const Dropdowns = props => {
 
     return (  
         <div>
-            {props.name}:  <select name={props.name} value={props.selectedName} onChange={(event) => props.handleChange(event)}>
+            <label>{props.name}:  <select name={props.name} value={props.selectedName} onChange={(event) => props.handleChange(event)}>
                 {firstOption}
                 {optionList}
-            </select>
+            </select></label>
         </div>
     );
   }

@@ -31,3 +31,8 @@ code {
   font-size: .8em;
   /* padding: 5px */
 }
+
+select {
+  margin: 8px 10px 20px 5px;
+  font-size: 1.1em
+}

@@ -6,7 +6,6 @@ import Dropdowns from './Dropdowns';
 import ArrivalsList from './ArrivalsList';
 
 const corsProxyURL = 'http://my-little-cors-proxy.herokuapp.com/';
-// const corsProxyURL = '';
 const MARTA_API_URL = 'http://developer.itsmarta.com/RealtimeTrain/RestServiceNextTrain/GetRealtimeArrivals';
 const myApiKey = '?apikey=' + config.MARTA_APIKEY1;
 
@@ -63,7 +62,7 @@ class Stations extends Component {
                             });
                         })
                     .catch(err => {
-                        console.log("BAM1!: ", err);
+                        console.log("API IS DOWN - DISPLAYING SAMPLE DATA!: ", err);
                         // if the API call fails, then load sample data into state
                         this.setState({
                             resetArrivals: sampleData.realtimeArrivalSample,
@@ -76,7 +75,7 @@ class Stations extends Component {
             });
         })
         .catch(err => {
-            console.log("BAM2!: ", err);
+            console.log("API IS DOWN - DISPLAYING SAMPLE DATA!: ", err);
             // if the API call fails, then load sample data into state
             this.setState({
                 resetArrivals: sampleData.realtimeArrivalSample,

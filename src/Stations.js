@@ -34,13 +34,16 @@ class Stations extends Component {
             const nameLists = getNameLists(arrivalsArray);
 
             this.setState({
+                // store arrivals and station names for resetting
                 resetArrivals: arrivalsArray,
                 resetStationNames: nameLists.stations,
                 arrivals: arrivalsArray,
+                // store station names, line names, and directions for dropdowns
                 stationNames: nameLists.stations,
                 lineNames: nameLists.lines,
                 directions: nameLists.directions
             }, () => {
+                // start timer for refresh rate
                 let timerId = setInterval(() => {
                     console.log("refreshing data");
                     fetch(corsProxyURL + MARTA_API_URL + myApiKey)

@@ -138,14 +138,15 @@ class Stations extends Component {
       });
   }
 
-  _display(arrs) {
-      console.log("Stations:");
-      console.dir(sampleData.stations);
-      console.log("Station Names:");
-      console.dir(this.state.stationNames);
-      console.log("Arrivals:");
-      console.dir(arrs);
-  }
+// not being used  
+//   _display(arrs) {
+//       console.log("Stations:");
+//       console.dir(sampleData.stations);
+//       console.log("Station Names:");
+//       console.dir(this.state.stationNames);
+//       console.log("Arrivals:");
+//       console.dir(arrs);
+//   }
 
   _handleSelect = (event) => {
     const selection = {name: event.target.name, value: event.target.value};

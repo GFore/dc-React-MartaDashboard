@@ -119,6 +119,7 @@ class Stations extends Component {
                     opts={["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2 min", "5 min", "10 min"]}
                     handleChange={this._handleNewRefreshRate}
                 />
+                <button onClick={() => this._resetToDefaults()}>Reset</button>
             </div>
             <ArrivalsList arrivals={this.state.arrivals}/>
             
@@ -148,9 +149,11 @@ class Stations extends Component {
 //       console.dir(arrs);
 //   }
 
+// called every time dropdown is changed
   _handleSelect = (event) => {
     const selection = {name: event.target.name, value: event.target.value};
 
+    // update line, direction, or station selection as necessary
     const newLine = (selection.name === "Line") ? selection.value : this.state.lineVal;
     const newDir = (selection.name === "Direction") ? selection.value : this.state.directionVal;
     const newStn = (selection.name === "Station") ? selection.value : this.state.stationVal;
@@ -158,7 +161,7 @@ class Stations extends Component {
     if (newLine === "ALL" && newDir === "ALL" && newStn === "ALL") {
         this._resetToDefaults();
     } else {
-        const newArrivals = filterArrivals (this.state.resetArrivals, newLine, newStn, newDir);
+        const newArrivals = filterArrivals(this.state.resetArrivals, newLine, newStn, newDir);
         const nameLists = getNameLists(newArrivals);
 
        // save the current drop-down list for the selected item
@@ -177,6 +180,7 @@ class Stations extends Component {
         })
     }
   }
+
   _handleNewRefreshRate = (event) => {
         window.clearInterval(this.state.timerId);       // clear the existing refresh setInterval
         console.log(`refresh timer #${this.state.timerId} stopped`);

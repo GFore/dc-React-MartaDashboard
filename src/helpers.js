@@ -23,7 +23,7 @@ function getNameLists(arvlArray) {
 }
 
 // sort the arrivals array by Line, then Direction, then station
-function sortArrivals (arvlArray) {
+function sortArrivals(arvlArray) {
     arvlArray = Object.values(arvlArray);
     
     arvlArray.sort((a,b) => ((a.LINE + a.DIRECTION + a.STATION) > (b.LINE + b.DIRECTION + b.STATION)) ? 1
@@ -33,7 +33,7 @@ function sortArrivals (arvlArray) {
 }
 
 // filter the arrivals array by the selected values for line, station, and direction
-function filterArrivals (arvlArray, filterLine, filterStn, filterDir) {
+function filterArrivals(arvlArray, filterLine, filterStn, filterDir) {
     if (filterLine !== "ALL") {arvlArray = arvlArray.filter(arr => arr.LINE === filterLine)};
     if (filterStn !== "ALL") {arvlArray = arvlArray.filter(arr => arr.STATION === filterStn)};
     if (filterDir !== "ALL") {arvlArray = arvlArray.filter(arr => arr.DIRECTION === filterDir)};

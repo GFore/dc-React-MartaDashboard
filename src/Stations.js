@@ -119,8 +119,8 @@ class Stations extends Component {
                     opts={["5 sec", "10 sec", "20 sec", "30 sec", "1 min", "2 min", "5 min", "10 min"]}
                     handleChange={this._handleNewRefreshRate}
                 />
-                <button onClick={() => this._resetToDefaults()}>Reset</button>
             </div>
+            <button onClick={() => this._resetToDefaults()}>Reset</button>
             <ArrivalsList arrivals={this.state.arrivals}/>
             
         </div>

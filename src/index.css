@@ -35,3 +35,9 @@ select {
   margin: 8px 10px 20px 5px;
   font-size: 1.1em
 }
+
+button {
+  padding: 6px 10px;
+  font-size: 0.9em;
+  border-radius: 5px;
+}

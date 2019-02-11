@@ -120,7 +120,7 @@ class Stations extends Component {
                     handleChange={this._handleNewRefreshRate}
                 />
             </div>
-            <button onClick={() => this._resetToDefaults()}>Reset</button>
+            <button onClick={() => this._resetToDefaults()}>Reset Filters</button>
             <ArrivalsList arrivals={this.state.arrivals}/>
             
         </div>

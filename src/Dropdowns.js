@@ -14,7 +14,7 @@ const Dropdowns = ({ handleChange, name, opts, selectedName }) => {
   
   return (  
     <div>
-      <label>{name}:  
+      <label>{`${name}:`}  
         <select 
           name={name} 
           value={selectedName} 
@@ -26,6 +26,6 @@ const Dropdowns = ({ handleChange, name, opts, selectedName }) => {
       </label>
     </div>
   );
-}
+};
 
 export default Dropdowns;

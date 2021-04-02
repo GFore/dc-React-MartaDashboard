@@ -139,16 +139,6 @@ class Stations extends Component {
       });
   }
 
-// not being used  
-//   _display(arrs) {
-//       console.log("Stations:");
-//       console.dir(sampleData.stations);
-//       console.log("Station Names:");
-//       console.dir(this.state.stationNames);
-//       console.log("Arrivals:");
-//       console.dir(arrs);
-//   }
-
 // called every time dropdown is changed
   _handleSelect = (event) => {
     const selection = {name: event.target.name, value: event.target.value};
